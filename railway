@@ -1,0 +1,262 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#define n 3
+int ar[n];
+int f=-1;
+int r=-1;
+int code;
+int ch;
+struct info
+{
+    char name[20];
+    long int tel;
+    char email[50];
+}s[n];
+void show();
+void reserve();
+void cancel();
+void display();
+
+void menu()
+{
+    int i;
+    printf("\nENTER\n\n1.TIMINGS AND ROUTES OF THE TRAIN\n\n2.RESERVE A TICKET\n\n3.CANCEL A TICKET\n\n4.DISPLAY THE INFORMATION\n\n5.EXIT\n");
+    scanf("%d",&i);
+    switch(i)
+    {
+    case 1: show();
+            break;
+    case 2: reserve();
+            menu();
+            break;
+    case 3: cancel();
+            menu();
+            break;
+    case 4: display();
+            menu();
+            break;
+    case 5: exit(0);
+            break;
+    default:printf("WRONG CHOICE\nENTER THE CORRECT CHOICE\n");
+            menu();
+            break;
+    }
+}
+
+void show()
+{
+    
+    printf("                 CODE           ROUTES          TIMINGS     Avg FARE");
+    printf("\n                 1021    Gurgaon to Mumbai       06:30        1500");
+    printf("\n                 1024    Gurgaon to kolkata      12:00        1300");
+    printf("\n                 1098    Gurgaon to Amritsar     14:30        600 ");
+    printf("\n                 1987    Gurgaon to Banglore     18:00        2400");
+    printf("\n                 1576    Gurgaon to chennai      20:00        2100\n");
+    
+    menu();
+}
+
+void check(int code,int r)
+{
+    if(code==1021||code==1024||code==1098||code==1987||code==1576)
+    {
+    printf("\n                          !!YOUR TICKET IS CONFIRMED!!\n\n");
+    }
+    else
+    {
+     printf("\n                        BUT YOUR TICKET IS NOT CONFIRMED!\n                         PLEASE ENTER THE CORRECT CODE\n\n");
+     printf("VALID CODES ARE\n1021      1024        1098        1987        1576\nCODE:");
+     scanf("%d",&code);
+     ar[r]=code;
+     check(code,r);
+    }
+}
+
+void reserve()
+{
+    if((f==0&&r==n-1)||(f==r+1))
+    {
+        printf("The Queue is full wait until the queue is empty\n");
+        menu();
+    }
+    if(f==-1)
+    {
+        f=r=0;
+    }
+    else if(r==(n-1))
+    {
+        r=0;
+    }
+    else
+    {
+        r+=1;
+    }
+    printf("Enter your details\n");
+    printf("\nEnter your name:\n");
+    scanf("%s",s[r].name);
+    printf("\nTelephone number:\n");
+    scanf("%ld",&(s[r].tel));
+    printf("\nEnter the email:\n");
+    scanf("%s",s[r].email);
+    printf("\nEnter  the Code of the Train:\n");
+    scanf("%d",&ar[r]);
+    code=ar[r];
+     printf("Ticket types\n\n");
+    printf("Enter\n1.AC First Class\n2.AC Second Class\n3.AC Third Class\n4.Sleeper\n");
+    scanf("%d",&ch);
+    switch(ch)
+    {
+        case 1: printf("Your fare is 2200rs\n");
+                break;
+        case 2: printf("Your fare is 1500rs\n");
+                break;
+        case 3: printf("Your fare is 950rs\n");
+                break;
+        case 4: printf("Your fare is 575rs\n");
+                break;
+        default:printf("WRONG CHOICE\n");
+                break;
+    }
+    check(code,r);
+    menu();
+}
+
+
+void amount_cancel(int ch)
+{
+    if(ch==1)
+        printf("You have booked AC FIRST CLASS ticket\nYour booking amount was 2200rs\n1800rs will be returned to you\n");
+    else if(ch==2)
+        printf("You have booked AC SECOND CLASS ticket\nYour booking amount was 1500rs\n1200rs will be returned to you\n");
+    else if(ch==3)
+        printf("You have booked AC THIRD CLASS ticket\nYour booking amount was 950rs\n700rs will be returned to you\n");
+    else
+        printf("You have booked SLEEPER CLASS ticket\nYour booking amount was 575rs\n400rs will be returned to you\n");
+}
+
+void display_delete(char name[],long int tel,char email[],int code)
+{
+    printf("THE INFORMATION OF THE CUSTOMER WHO CANCELED THE TICKET IS:\n");
+    printf("\nName: %s\n",name);
+    printf("\nTelephone number: %ld\n",tel);
+    printf("\EMAIL_ID: %s\n",email);
+    printf("\nCode of the Train: %d\n\n",code);
+    amount_cancel(ch);
+}
+void cancel()
+{
+    int count=0;
+    char name[20];
+    long int tel;
+    char email[20];
+    int code;
+    if(f==-1)
+    {
+        printf("                       WARNING!!NO TICKET IS RESERVED YET!!\n");
+    }
+
+    strcpy(name,s[f].name);
+    tel=s[f].tel;
+    strcpy(email,s[f].email);
+    code=ar[f];
+
+    if(f==r)
+    {
+        printf("                       !!ONLY ONE TICKET WAS RESERVED!!\n");
+        strcpy(name,s[f].name);
+        tel=s[f].tel;
+        strcpy(email,s[f].email);
+        code=ar[f];
+        printf("THE INFORMATION OF THE CUSTOMER WHO CANCELED THE TICKET IS\n");
+        printf("\nName: %s\n",name);
+        printf("\nTelephone number: %ld\n",tel);
+        printf("\nEMAIL_ID: %s\n",email);
+        printf("\nCode of the train: %d\n\n",code);
+        amount_cancel(ch);
+        f=r=-1;
+        count++;
+    }
+    else if(f==(n-1))
+    {
+        f=0;
+    }
+    else
+    {
+        f+=1;
+    }
+    if(count==0)
+    {
+        display_delete(name,tel,email,code);
+    }
+    menu();
+}
+
+void amount_is(int ch)
+{
+        if(ch==1)
+        printf("You have booked FIRST CLASS ticket\nYour booking amount is 2200rs\n");
+        else if(ch==2)
+        printf("You have booked SECOND CLASS ticket\nYour booking amount is 1500rs\n");
+        else if(ch==3)
+        printf("You have booked THIRD CLASS ticket\nYour booking amount is 950rs\n");
+        else
+        printf("You have booked SLEEPER CLASS ticket\nYour booking amount is 575rs\n");
+}
+
+void display()
+{
+    if(f==-1)
+    {
+        printf("                       WARNING!!No ticket is reserved yet!!\n");
+        menu();
+    }
+    else
+    {
+        
+        printf("INFORMATION OF THE CUSTOMERS WHOSE TICKET ARE CONFIRMED\n");
+    if(f<=r)
+    {
+
+        int i;
+        for(i=f;i<=r;i++)
+        {
+        printf("\nName: %s\n",s[i].name);
+        printf("\nTelephone Number: %ld\n",s[i].tel);
+        printf("\nEMAIL_ID: %s\n",s[i].email);
+        printf("\nCode of the Train: %d\n\n",ar[i]);
+        amount_is(ch);
+        
+        }
+    }
+
+    else if(f>r)
+    {
+        int i;
+        for(i=f;i<=(n-1);i++)
+        {
+        printf("\nName: %s\n",s[i].name);
+        printf("\nTelephone Number: %ld\n",s[i].tel);
+        printf("\nEMAIL_ID: %s\n",s[i].email);
+        printf("\nCode of the Train: %d\n\n",ar[i]);
+        amount_is(ch);
+        
+        }
+        for(i=0;i<=r;i++)
+        {
+        printf("\nName: %s\n",s[i].name);
+        printf("\nTelephone Number: %ld\n",s[i].tel);
+        printf("\nEMAIL_ID: %s\n",s[i].email);
+        printf("\nCode of the Train: %d\n\n",ar[i]);
+        amount_is(ch);
+        
+        }
+    }
+    }
+}
+int main()
+{
+    printf("\n_Welcome to Railway Reservation System_\n\n");
+    menu();
+    return 0;
+}
